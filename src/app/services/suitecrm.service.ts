@@ -42,19 +42,19 @@ export class SuitecrmService {
   }
 
   obtienevendedorv2(data: any): Observable<any>{
-    console.log("este es la ciudad-->"+data);
+    console.log("esta es la ciudad-->"+data.ciudad);
     if(data.ciudad==null||data.ciudad==''){
       data.ciudad="SANTA CRUZ";
     }
-    data=data.ciudad.replaceAll(" ","_");
-    let url = environment.url_api_slim3+"/api/crm/vendedor/"+data.ciudad+"/"+data.nombre+"/"+data.apellido+"/"+data.telefono;
+    data.ciudad=data.ciudad.replaceAll(" ","_");
+    let url = environment.url_api_slim3+"/api/crm/turno/"+data.ciudad+"/"+data.nombre+"/"+data.apellido+"/"+data.telefono;
     return this.http.get(url, data).pipe(
       
     );
   }
-  obtine_tipo_prospecto(data: any): Observable<any>{
+  obtine_tipo_prospecto(): Observable<any>{
     let url = environment.url_crm+"/?entryPoint=Call_SP_EntryPoint&action=listar_tipo_prospecto&kv=y";
-    return this.http.get(url, data).pipe(
+    return this.http.get(url).pipe(
       
     );
   }

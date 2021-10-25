@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { CountryService } from "src/app/services/country-service.service";
 import { SuitecrmService } from "src/app/services/suitecrm.service";
 import { FilterService } from "primeng/api";
+import { CastExpr } from '@angular/compiler';
 
 
 @Component({
@@ -62,8 +63,27 @@ export class LandingpageComponent implements OnInit {
   
   
   ngOnInit(): void {
+    
+    let dias_vigencia=30;
+    this.crmService.obtine_tipo_prospecto().subscribe(response => {
+      if(response.data){
+        response.data.forEach(element => {
+          if(element.name=="NORMAL"){
+            switch (element.tiempo_de_vigencia_dma){
+              case 'DAY':dias_vigencia=element.tiempo_de_vigencia_cantidad;break
+              case 'MONTH':dias_vigencia=element.tiempo_de_vigencia_cantidad*30;break;
+              case 'YEAR':dias_vigencia=element.tiempo_de_vigencia_cantidad*365;break;
+              default: dias_vigencia=30;
+            }
+            console.log(element);
+            console.log("cantidad de dias de vigencia: "+dias_vigencia);
+          }
+        });
+      }
+    });
+
     this.dt = new Date();
-    this.dt.setDate(this.dt.getDate() + 30);
+    this.dt.setDate(this.dt.getDate() + dias_vigencia);
     let aux=this.dt.toLocaleDateString().split("/");
     this.fecha_exp=aux[2]+"-"+aux[1]+"-"+aux[0];
 
@@ -185,7 +205,15 @@ export class LandingpageComponent implements OnInit {
       let token="";
       let id_agente_ventas="2fd67f1f-6635-986f-49aa-610c59ecb599";
       this.cel_agente_ventas="70187866";
-      this.crmService.obtienevendedor(((this.datos_landing.controls['ciudad']?.value?.name) ? this.datos_landing.controls['ciudad']?.value?.name : 'Santa Cruz')).subscribe(response => {
+      let json_obtiene_vendedor:any;
+      json_obtiene_vendedor={
+        ciudad:this.datos_landing.controls['ciudad']?.value?.name,
+        nombre:this.datos_landing.controls['nombre'].value,
+        apellido:this.datos_landing.controls['ap_pat'].value,
+        telefono:"+"+this.datos_landing.controls['codigo'].value.numero_pais + "" + this.datos_landing.controls['celular'].value
+      };
+      console.log(json_obtiene_vendedor);
+      this.crmService.obtienevendedorv2(json_obtiene_vendedor).subscribe(response => {
         if(response.data!=null){
           id_agente_ventas=response.data[0].id;
           this.cel_agente_ventas=response.data[0].telefono;
@@ -193,7 +221,7 @@ export class LandingpageComponent implements OnInit {
         console.log(this.cel_agente_ventas+"   "+id_agente_ventas);
 
         this.nombre_completo = this.datos_landing.controls['nombre'].value + " " + this.datos_landing.controls['ap_pat'].value + " " + this.datos_landing.controls['ap_mat'].value
-        let numero_completo = this.datos_landing.controls['codigo'].value.numero_pais + " " + this.datos_landing.controls['celular'].value;
+        let numero_completo = "+"+this.datos_landing.controls['codigo'].value.numero_pais + "" + this.datos_landing.controls['celular'].value;
         let data_crear_prospecto={
           "data": {
             "type": "Leads",
