@@ -1,0 +1,16 @@
+body,h1,h2,h3 {
+    color: #325baa!important;
+    font-family: 'Average Sans',Helvetica,Arial,Lucida,sans-serif;
+}
+i {
+    border: #325baa;
+    color: #325baa;
+    padding: 7px;
+    margin: 8px 0px;
+}
+.w-full{
+    margin: 8px 0px;
+}
+.p-error{
+    display: block;
+}
