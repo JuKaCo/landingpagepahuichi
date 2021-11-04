@@ -207,7 +207,7 @@ export class LandingpageComponent implements OnInit {
       this.cel_agente_ventas="70187866";
       let json_obtiene_vendedor:any;
       json_obtiene_vendedor={
-        ciudad:this.datos_landing.controls['ciudad']?.value?.name,
+        ciudad:((this.datos_landing.controls['ciudad']?.value?.name) ? this.datos_landing.controls['ciudad']?.value?.name : 'Santa Cruz'),
         nombre:this.datos_landing.controls['nombre'].value,
         apellido:this.datos_landing.controls['ap_pat'].value,
         telefono:"+"+this.datos_landing.controls['codigo'].value.numero_pais + "" + this.datos_landing.controls['celular'].value
@@ -234,7 +234,7 @@ export class LandingpageComponent implements OnInit {
               "email1": "Sin datos",
               "account_name": this.nombre_completo,
               "primary_address_country": this.datos_landing.controls['pais'].value.id,
-              "primary_address_state": ((this.datos_landing.controls['ciudad']?.value?.id) ? this.datos_landing.controls['ciudad']?.value?.id : 'Sin datos'),
+              "primary_address_state": ((this.datos_landing.controls['ciudad']?.value?.id) ? this.datos_landing.controls['ciudad']?.value?.id : '00'),
               "assigned_user_id": id_agente_ventas,
               "lead_source2_c": this.red_social.toUpperCase(),
               "lead_source": "LANDING_PAGE",
