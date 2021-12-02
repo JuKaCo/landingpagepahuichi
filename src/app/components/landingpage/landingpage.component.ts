@@ -108,10 +108,9 @@ export class LandingpageComponent implements OnInit {
         console.log("error al cargar los datos");
       });
 
-    this.countryService.getCRMdbCountries("any").subscribe(response => {
-      if (response.success) {
-        this.countries2 = response.data;
-      }
+    this.countryService.listarPais().subscribe(response => {
+      console.log(response);
+      this.countries2 = response;
     },  error => {
         console.log("error al cargar los datos");
       });
@@ -171,30 +170,18 @@ export class LandingpageComponent implements OnInit {
         }
     }
     return invalid;
-}
-
+  }
+  
   recargaciudades(value){
-    console.log("el valor "+value.id);
+    this.cities = [];
     this.datos_landing.controls['ciudad'].reset();
-    this.countryService.getCRMdbStates(value.id).subscribe(response => {
-      if (response.success) {
-        this.cities = response.data;
-        if(response.data!=null){
-          //this.datos_landing.controls['ciudad'].setValidators(['',Validators.required]);
-          //this.datos_landing.controls['ciudad'].updateValueAndValidity();
-          this.enableCities=true;
-          
-        }else{
-          this.enableCities=false;
-          //this.datos_landing.controls['ciudad'].clearValidators();
-          //this.datos_landing.controls['ciudad'].updateValueAndValidity();
-        }
-      }else{
-
-      }
-    },  error => {
-        console.log("error al cargar los datos");
-      });
+    let i = this.countries2.map(function (elem) { return elem.abr_pais }).indexOf(value.abr_pais);
+    if (i >= 0) {
+      this.cities = this.countries2[i].estados;
+      this.enableCities=true;
+    }else{
+      this.enableCities=false;
+    }
   }
 
   abrirLink(){
@@ -207,7 +194,7 @@ export class LandingpageComponent implements OnInit {
       this.cel_agente_ventas="70187866";
       let json_obtiene_vendedor:any;
       json_obtiene_vendedor={
-        ciudad:((this.datos_landing.controls['ciudad']?.value?.name) ? this.datos_landing.controls['ciudad']?.value?.name : 'Santa Cruz'),
+        ciudad:((this.datos_landing.controls['ciudad']?.value?.estado) ? this.datos_landing.controls['ciudad']?.value?.estado : 'Santa Cruz'),
         nombre:this.datos_landing.controls['nombre'].value,
         apellido:this.datos_landing.controls['ap_pat'].value,
         telefono:"+"+this.datos_landing.controls['codigo'].value.numero_pais + "" + this.datos_landing.controls['celular'].value
@@ -229,12 +216,12 @@ export class LandingpageComponent implements OnInit {
               "name": this.nombre_completo,
               "first_name": this.datos_landing.controls['nombre'].value,
               "last_name": this.datos_landing.controls['ap_pat'].value,
-              "last_name2_c": "Sin datos",
+              "last_name2_c": " ",
               "phone_mobile": numero_completo,
-              "email1": "Sin datos",
+              "email1": " ",
               "account_name": this.nombre_completo,
-              "primary_address_country": this.datos_landing.controls['pais'].value.id,
-              "primary_address_state": ((this.datos_landing.controls['ciudad']?.value?.id) ? this.datos_landing.controls['ciudad']?.value?.id : '00'),
+              "primary_address_country": this.datos_landing.controls['pais'].value.abr_pais,
+              "primary_address_state": ((this.datos_landing.controls['ciudad']?.value?.abr_estado) ? this.datos_landing.controls['ciudad']?.value?.abr_estado : '00'),
               "assigned_user_id": id_agente_ventas,
               "lead_source2_c": this.red_social.toUpperCase(),
               "lead_source": "LANDING_PAGE",
@@ -284,7 +271,7 @@ export class LandingpageComponent implements OnInit {
     this.texto_boton="Solicitud enviada";
     this.message=this.message.replace("@@empresa","El Pahuichi");
     this.message=this.message.replace("@@nombre_completo",this.nombre_completo);
-    this.message=this.message.replace("@@ciudad",this.datos_landing.controls['pais'].value.name+", "+((this.datos_landing.controls['ciudad']?.value?.name) ? this.datos_landing.controls['ciudad']?.value?.name : ''));
+    this.message=this.message.replace("@@ciudad",this.datos_landing.controls['pais'].value.pais+", "+((this.datos_landing.controls['ciudad']?.value?.estado) ? this.datos_landing.controls['ciudad']?.value?.estado : ''));
     var url = 'https://api.whatsapp.com/send?phone='+this.cel_agente_ventas+'&text=' + encodeURIComponent(this.message);
     window.open(url, "_blank");
   }
@@ -309,7 +296,7 @@ export class LandingpageComponent implements OnInit {
     let query = event.query;
     for (let i = 0; i < this.countries2.length; i++) {
       let country = this.countries2[i];
-      if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+      if (country.pais.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filtered.push(country);
       }
     }
@@ -323,7 +310,7 @@ export class LandingpageComponent implements OnInit {
     let query = event.query;
     for (let i = 0; i < this.cities.length; i++) {
       let city = this.cities[i];
-      if (city.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+      if (city.estado.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filtered.push(city);
       }
     }

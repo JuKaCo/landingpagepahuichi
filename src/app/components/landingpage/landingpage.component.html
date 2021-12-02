@@ -57,10 +57,10 @@
                         <div class="grid">
                             <div class="col-1"><i class="pi pi-map"></i></div>
                             <div class="col-11" style="margin: 8px 0px;">
-                                <p-autoComplete (onSelect)="recargaciudades($event)" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" formControlName="pais"  class="inputfield w-full" [suggestions]="filteredCountries2" (completeMethod)="filterCountry2($event)" field="name" [dropdown]="true" placeholder="Seleccione país">
+                                <p-autoComplete (onSelect)="recargaciudades($event)" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" formControlName="pais"  class="inputfield w-full" [suggestions]="filteredCountries2" (completeMethod)="filterCountry2($event)" field="pais" [dropdown]="true" placeholder="Seleccione país">
                                     <ng-template let-countries2 pTemplate="item">
                                         <div class="countries2-item">
-                                            {{countries2.name}}
+                                            {{countries2.pais}}
                                         </div>
                                     </ng-template>
                                 </p-autoComplete>
@@ -69,10 +69,10 @@
                         </div>
                         <div class="grid" >
                             <div class="col-11 col-offset-1" style="margin: 8px 0px;">
-                                <p-autoComplete [style.display]="(enableCities) ? 'block' : 'none'" [disabled]="!enableCities" [required]="enableCities" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" formControlName="ciudad"  class="inputfield w-full" [suggestions]="filteredCities" (completeMethod)="filterCity($event)" field="name" [dropdown]="true" placeholder="Seleccione ciudad">
+                                <p-autoComplete [style.display]="(enableCities) ? 'block' : 'none'" [disabled]="!enableCities" [required]="enableCities" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" formControlName="ciudad"  class="inputfield w-full" [suggestions]="filteredCities" (completeMethod)="filterCity($event)" field="estado" [dropdown]="true" placeholder="Seleccione ciudad">
                                     <ng-template let-cities pTemplate="item">
                                         <div class="cities-item">
-                                            {{cities.name}}
+                                            {{cities.estado}}
                                         </div>
                                     </ng-template>
                                 </p-autoComplete>
